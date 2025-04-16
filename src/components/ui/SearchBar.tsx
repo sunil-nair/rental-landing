@@ -17,7 +17,7 @@ type SearchBarProps = {
 };
  
 // ✅ Reusable SearchBar component for dashboards, filtering, or assistant interfaces
-export function SearchBar({
+export default function SearchBar({
   placeholder = "Ask a question…", // Default placeholder if none is provided
   suggestions = [], // Default to no suggestions
   onSearch,

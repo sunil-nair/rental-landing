@@ -1,66 +1,82 @@
-// ✅ app/dashboard/page.tsx
-// Main Dashboard page for authenticated users
-// Displays: smart search bar + modular dashboard cards
-// Cards include Rent Collected, Late Payments, and Recent Expenses
+'use client';
 
-'use client'; // Enables client-side React features in Next.js App Router
-
-import { DashboardCard } from "@/components/ui/Card"; // Standardized Card component
-import { SearchBar } from "@/components/ui/SearchBar"; // Reusable search + prompt assistant
-import { useState } from "react";
+import { useState } from 'react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import DashboardCard from '@/components/ui/Card';
+import SearchBar from '@/components/ui/SearchBar';
+import FormattedResponse from '@/components/ui/FormattedResponse';
 
 export default function DashboardPage() {
-  // 🔹 Stores the query from the SearchBar (not wired to backend yet)
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
+  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: any }[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleSearch = async (question: string) => {
+    setMessages((prev) => [...prev, { role: 'user', content: question }]);
+    setLoading(true);
+
+    try {
+      const res = await fetch('https://n8n-nova-u37847.vm.elestio.app/webhook/59c6eaad-854c-46cd-b84c-170eb561ce11', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      });
+
+      const result = await res.json();
+      setMessages((prev) => [...prev, { role: 'assistant', content: result }]);
+    } catch (err) {
+      setMessages((prev) => [...prev, { role: 'assistant', content: { error: 'Failed to fetch response' } }]);
+    } finally {
+      setLoading(false);
+      setQuery('');
+    }
+  };
 
   return (
-    <main className="p-6 space-y-8">
-      {/* 🔍 Smart Assistant Search Bar */}
-      <SearchBar
-        placeholder="Ask about rent, expenses, or tenants..."
-        suggestions={[
-          "How much rent did I collect this month?",
-          "Which units are vacant?",
-          "Show last 10 expenses",
-        ]}
-        onSearch={(q) => setQuery(q)} // Logs or handles the submitted query
-      />
+    <Tabs defaultValue="dashboard" className="w-full p-6">
+      <TabsList className="mb-4">
+        <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+        <TabsTrigger value="assistant">Ask Assistant</TabsTrigger>
+      </TabsList>
 
-      {/* 🧾 Dashboard Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* 💸 Rent Collected + Unit Summary Card */}
-        <DashboardCard title="Rent Collected">
-          <p className="text-3xl font-bold">$4,200</p>
-          <p className="text-sm text-gray-500 mt-1">
-            2 vacant units · Agent: Sarah Lee
-          </p>
-        </DashboardCard> 
-
-        {/* ⏰ Late Payments Card */}
-        <DashboardCard title="Late Payments"> 
-          <ul className="space-y-2">
-            <li className="flex justify-between">
-              <span>John Doe · (555) 123-4567</span>
-              <button className="text-sm text-blue-600 hover:underline">Send Email</button>
-            </li>
-            <li className="flex justify-between">
-              <span>Mary Smith · (555) 987-6543</span>
-              <button className="text-sm text-blue-600 hover:underline">Send Email</button>
-            </li>
+      <TabsContent value="dashboard" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <DashboardCard title="Expenses (Last 10)">
+          <ul className="text-sm text-gray-700 space-y-1">
+            <li>🛠 Plumbing — $120</li>
+            <li>🔧 Repairs — $150</li>
+            <li>🧹 Cleaning — $90</li>
           </ul>
         </DashboardCard>
-
-        {/* 🧾 Recent Expenses Card */}
-        <DashboardCard title="Recent Expenses">
-          <ul className="text-sm space-y-1">
-            <li>🧰 Plumbing - $120 · Elm St</li>
-            <li>🔧 HVAC Repair - $340 · Pine Ave</li>
-            <li>🧹 Cleaning - $75 · Maple Blvd</li>
-            <li>🛠️ Painting - $500 · Cedar Ct</li>
-            <li>🚿 Shower Install - $600 · Oak Ln</li>
+        <DashboardCard title="Rent Collection">
+          <p className="text-sm">Total Collected: $4,500</p>
+          <p className="text-sm text-gray-500">2 vacant units • Agent: Maya</p>
+        </DashboardCard>
+        <DashboardCard title="Late Payments">
+          <ul className="text-sm">
+            <li>John Doe • 555-1234 <button className="text-blue-600 underline ml-2 text-xs">Send Email</button></li>
+            <li>Jane Smith • 555-9876 <button className="text-blue-600 underline ml-2 text-xs">Send Email</button></li>
           </ul>
         </DashboardCard>
-      </div>
-    </main>
+      </TabsContent>
+
+      <TabsContent value="assistant">
+        <div className="max-w-3xl mx-auto space-y-6">
+          <SearchBar query={query} setQuery={setQuery} onSearch={handleSearch} loading={loading} />
+          <div className="bg-white border rounded-lg p-4 shadow-sm max-h-[400px] overflow-y-auto space-y-4 text-sm">
+            {messages.map((msg, idx) => (
+              <div key={idx}>
+                <p className="font-semibold mb-1">{msg.role === 'user' ? 'You' : 'Assistant'}:</p>
+                {msg.role === 'assistant' ? (
+                  <FormattedResponse data={msg.content} />
+                ) : (
+                  <p>{msg.content}</p>
+                )}
+              </div>
+            ))}
+            {loading && <p className="text-gray-500 italic">Assistant is thinking...</p>}
+          </div>
+        </div>
+      </TabsContent>
+    </Tabs>
   );
 }
