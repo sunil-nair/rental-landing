@@ -37,7 +37,7 @@ export default function Home() {
           <a href="#" className="hover:text-black transition">Features</a>
           <a href="#" className="hover:text-black transition">Contact</a>
           <a href="/signin" className="hover:text-black transition">Sign In</a>
-          <a href="/signup" className="hover:text-black transition">Sign Up</a> 
+          <a href="/signup" className="hover:text-black transition">Sign Up</a>   
         </div>
       </nav>
 
