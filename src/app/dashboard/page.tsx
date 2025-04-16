@@ -37,7 +37,7 @@ export default function DashboardPage() {
         </DashboardCard> 
 
         {/* ⏰ Late Payments Card */}
-        <DashboardCard title="Late Payments">
+        <DashboardCard title="Late Payments"> 
           <ul className="space-y-2">
             <li className="flex justify-between">
               <span>John Doe · (555) 123-4567</span>

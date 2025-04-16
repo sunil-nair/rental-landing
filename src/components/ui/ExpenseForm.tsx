@@ -11,7 +11,7 @@ export default function ExpenseForm() {
     category: "",
     notes: "",
   });
-
+ 
   useEffect(() => {
     async function fetchCategories() {
       try {

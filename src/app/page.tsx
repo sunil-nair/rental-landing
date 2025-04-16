@@ -30,9 +30,9 @@ export default function Home() {
         <div className="text-xl font-bold text-indigo-600">RentPilot</div>
 
         {/* 🔹 Navigation links (right-aligned) */}
-        <div className="space-x-6">
+        <div className="space-x-6"> 
           {/* 🔹 Other navigation links */}
-          <a href="#" className="hover:text-black transition">About</a>
+          <a href="#" className="hover:text-black transition">About</a> 
           <a href="#" className="hover:text-black transition">Pricing</a>          
           <a href="#" className="hover:text-black transition">Features</a>
           <a href="#" className="hover:text-black transition">Contact</a>

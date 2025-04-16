@@ -21,7 +21,7 @@ export function GetStartedButton() {
     } else {
       router.push("/signup"); 
     }
-
+ 
     setLoading(false);
   };
 

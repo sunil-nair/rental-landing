@@ -115,7 +115,7 @@ export default function SignUpPage() {
           />
         </div>
 
-        {/* Password Field */}
+        {/* Password Field */} 
         <div>
           <Label>Password</Label>
           <Input

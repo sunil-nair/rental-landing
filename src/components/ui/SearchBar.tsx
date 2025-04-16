@@ -15,7 +15,7 @@ type SearchBarProps = {
   // Callback function to handle search query (via Enter key or button click)
   onSearch: (query: string) => void;
 };
-
+ 
 // ✅ Reusable SearchBar component for dashboards, filtering, or assistant interfaces
 export function SearchBar({
   placeholder = "Ask a question…", // Default placeholder if none is provided

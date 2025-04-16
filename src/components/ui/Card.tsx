@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"; // Optional helper for merging Tailwind classe
 type CardProps = {
   // Title displayed at the top of the card
   title: string;
-
+ 
   // Content inside the card body
   children: React.ReactNode;
 
