@@ -34,7 +34,7 @@ export default function DashboardPage() {
           <p className="text-sm text-gray-500 mt-1">
             2 vacant units · Agent: Sarah Lee
           </p>
-        </DashboardCard>
+        </DashboardCard> 
 
         {/* ⏰ Late Payments Card */}
         <DashboardCard title="Late Payments">

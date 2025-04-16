@@ -19,7 +19,7 @@ export function GetStartedButton() {
     if(true) { // not checking user logged in for now.
       router.push("/dashboard");
     } else {
-      router.push("/signup");
+      router.push("/signup"); 
     }
 
     setLoading(false);
